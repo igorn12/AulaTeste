@@ -7,31 +7,35 @@ public class Jogo {
         private int resultado;
         private Dado dado1 = new Dado();
         private Dado dado2 = new Dado();
-        private Jogador jogador1, jogador2;
+        private Jogador[] jogadores;
     
     public void inserirJogadores(){
-        System.out.println("Qual o nome do primeiro jogador?");
-        jogador1 = new Jogador(input.next());
-        System.out.println("Qual o nome do segundo jogador?");
-        jogador2 = new Jogador(input.next());
+        int qtd;
+        System.out.println("Informe o numero de jogadores:");
+        do{
+            System.out.println("Maximo 11");
+            qtd = input.nextInt();
+        }while(qtd > 11);
+        
+        jogadores = new Jogador[qtd];
+        
+        for (int i = 0; i < 11; i++) {
+            System.out.println("Qual o nome do "+(i+1)+" jogador?");
+            jogadores[i]  = new Jogador(input.next());
+        }
+
     }
     
     public void inserirAposta(){
         int aposta = 0;
-        do{
-            System.out.println(jogador1.getName()+" informe sua aposta:");
+        for (Jogador j : jogadores) {
+            do{
+            System.out.println(j.getName()+" informe sua aposta:");
             aposta = input.nextInt();
-        }while(aposta < 2 || aposta > 12 );
-        jogador1.setAposta(aposta);
+            }while(aposta < 2 || aposta > 12 );
+            j.setAposta(aposta);
         
-        do{
-            System.out.println(jogador2.getName()+" informe sua aposta:");
-            aposta = input.nextInt();
-            if(aposta == jogador1.getAposta()){
-                System.out.println("valor inválido, informe outro:");
-            };
-        }while(aposta < 2  || aposta > 12 || aposta == jogador1.getAposta());
-        jogador2.setAposta(aposta);
+        }   
     }   
     
     public void lancarDado(){
@@ -45,13 +49,15 @@ public class Jogo {
     }
     
     public void mostrarVencedor(){
-        if(resultado == jogador1.getAposta()){
-            System.out.println(jogador1.getName()+" Venceu!!");
-        }else if(resultado == jogador2.getAposta()){
-            System.out.println(jogador2.getName()+" Venceu!!");
-        }else{
-            System.out.println("Computador venceu!!");
+        boolean ganhou = false;
+        for(Jogador j : jogadores){
+            if(resultado == j.getAposta()){
+                System.out.println(j.getName()+" Venceu!!");
+                ganhou = true;
+            }
+        }
+        if(!ganhou){
+            System.out.println("Computador venceu!");
         }
     }
-    
 }
